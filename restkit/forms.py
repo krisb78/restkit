@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -
 #
-# This file is part of restkit released under the MIT license. 
+# This file is part of restkit released under the MIT license.
 # See the NOTICE for more information.
 
 
 import mimetypes
+import io
 import os
 import re
 import urllib.request, urllib.parse, urllib.error
@@ -39,7 +40,7 @@ class BoundaryItem(object):
             filetype = to_bytestring(filetype)
         self.filetype = filetype
 
-        if isinstance(value, file) and filesize is None:
+        if isinstance(value, io.IOBase) and filesize is None:
             try:
                 value.flush()
             except IOError:
@@ -115,7 +116,7 @@ class MultipartForm(object):
                     filetype = ';'.join([_f for _f in mimetypes.guess_type(fname) if _f])
                 else:
                     filetype = None
-                if not isinstance(value, file) and self._clen is None:
+                if not isinstance(value, io.IOBase) and self._clen is None:
                     value = value.read()
 
                 boundary = bitem_cls(name, value, fname, filetype, quote=quote)
