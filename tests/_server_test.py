@@ -344,13 +344,13 @@ class HTTPTestHandler(BaseHTTPRequestHandler):
         #    self.send_header("Content-Length", len(body))
         self.end_headers()
         self.wfile.write(body)
-        self.wfile.close()
+        # self.wfile.close()
 
     def finish(self):
         if not self.wfile.closed:
             self.wfile.flush()
-        self.wfile.close()
-        self.rfile.close()
+        # self.wfile.close()
+        # self.rfile.close()
 
 server_thread = None
 def run_server_test():
