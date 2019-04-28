@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -
 #
-# Copyright (c) 2008 (c) Benoit Chesneau <benoitc@e-engura.com> 
+# Copyright (c) 2008 (c) Benoit Chesneau <benoitc@e-engura.com>
 #
 # Permission to use, copy, modify, and distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -39,11 +39,11 @@ PORT = (os.getpid() % 31000) + 1024
 class HTTPTestHandler(BaseHTTPRequestHandler):
 
     def __init__(self, request, client_address, server):
-        self.auth = 'Basic ' + base64.encodestring('test:test')[:-1]
+        self.auth = b'Basic ' + base64.encodebytes(b'test:test')[:-1]
         self.count = 0
         BaseHTTPRequestHandler.__init__(self, request, client_address, server)
-        
-        
+
+
     def do_GET(self):
         self.parsed_uri = urllib.parse.urlparse(urllib.parse.unquote(self.path))
         self.query = {}
@@ -120,7 +120,7 @@ class HTTPTestHandler(BaseHTTPRequestHandler):
         elif path == "/pool":
             extra_headers = [('Content-type', 'text/plain')]
             self._respond(200, extra_headers, "ok")
-        
+
         elif path == "/cookie":
             c = http.cookies.SimpleCookie()
             c["fig"] = "newton"
@@ -128,7 +128,7 @@ class HTTPTestHandler(BaseHTTPRequestHandler):
             for k in list(c.keys()):
                 extra_headers = [('Set-Cookie', str(c[k].output(header='')))]
             self._respond(200, extra_headers, "ok")
-        
+
         elif path == "/cookies":
             c = http.cookies.SimpleCookie()
             c["fig"] = "newton"
@@ -139,9 +139,9 @@ class HTTPTestHandler(BaseHTTPRequestHandler):
             for k in list(c.keys()):
                 extra_headers.append(('Set-Cookie', str(c[k].output(header=''))))
             self._respond(200, extra_headers, "ok")
-        
+
         else:
-            self._respond(404, 
+            self._respond(404,
                 [('Content-type', 'text/plain')], "Not Found" )
 
 
@@ -191,7 +191,7 @@ class HTTPTestHandler(BaseHTTPRequestHandler):
                 self._respond(200, extra_headers, "ok")
             else:
                 self.error_Response()
-            
+
         elif path == "/query":
             test = self.query.get("test", False)
             if test and test == "testing":
@@ -299,7 +299,7 @@ class HTTPTestHandler(BaseHTTPRequestHandler):
                 self.error_Response()
         else:
             self.error_Response('Bad path')
-            
+
     do_PUT = do_POST
 
     def do_DELETE(self):
@@ -358,7 +358,7 @@ def run_server_test():
     if server_thread is not None:
         return
 
-        
+
     server = HTTPServer((HOST, PORT), HTTPTestHandler)
 
     server_thread = threading.Thread(target=server.serve_forever)
