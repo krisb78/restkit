@@ -101,6 +101,9 @@ class Connection(Connector):
         if chunked:
             return self.send_chunk(data)
 
+        if not isinstance(data, bytes):
+            data = data.encode()
+
         return self._s.sendall(data)
 
     def sendlines(self, lines, chunked=False):
